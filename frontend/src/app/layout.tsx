@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/custom/Navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
+            <Navbar />
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>

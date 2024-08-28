@@ -32,12 +32,11 @@ function NavMenu() {
                   >
                     {/* <Icons.logo className="h-6 w-6" /> */}
                     <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
+                      confidant
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
+                      simplified solution designed to manage your variables, API keys,
+                      and database connections. Secure. Effortless. Expandable. 
                     </p>
                   </a>
                 </NavigationMenuLink>
