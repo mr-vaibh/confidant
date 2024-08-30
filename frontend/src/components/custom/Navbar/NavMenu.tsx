@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import components from "./LinkData";
+import Login from "@/components/custom/Login/Login";
 
 function NavMenu() {
   return (
@@ -35,8 +36,9 @@ function NavMenu() {
                       confidant
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      simplified solution designed to manage your variables, API keys,
-                      and database connections. Secure. Effortless. Expandable. 
+                      simplified solution designed to manage your variables, API
+                      keys, and database connections. Secure. Effortless.
+                      Expandable.
                     </p>
                   </a>
                 </NavigationMenuLink>
@@ -84,9 +86,7 @@ function NavMenu() {
           </Link>
         </NavigationMenuItem>
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
-        <Button className="md:mr-2 mt-4 md:mt-0" variant="link">
-          Log in
-        </Button>
+        <Login />
         <Button className="mt-4 md:mt-0" variant="default">
           Sign up
         </Button>
