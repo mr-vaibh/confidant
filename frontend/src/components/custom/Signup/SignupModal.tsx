@@ -6,22 +6,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import LoginContent from "./LoginContent";
+import SignupContent from "./SignupContent";
 
-export default function LoginModal() {
+export default function SignupModal() {
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Login</DialogTitle>
+        <DialogTitle>Signup</DialogTitle>
         <DialogDescription>
-          Welcome back
+          Get started here
         </DialogDescription>
       </DialogHeader>
 
-      <LoginContent />
+      <SignupContent />
 
       <DialogFooter>
-        <Button type="submit">Login</Button>
+        <Button type="submit">Get Started</Button>
       </DialogFooter>
     </DialogContent>
   )

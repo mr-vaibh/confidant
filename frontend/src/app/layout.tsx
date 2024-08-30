@@ -14,10 +14,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
+  login,
+  signup,
 }: Readonly<{
   children: React.ReactNode
-  modal: React.ReactNode
+  login: React.ReactNode
+  signup: React.ReactNode
 }>) {
   return (
     <html lang="en">
@@ -31,7 +33,8 @@ export default function RootLayout({
           <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
             <Navbar />
             {children}
-            {modal}
+            {login}
+            {signup}
           </main>
         </ThemeProvider>
       </body>
