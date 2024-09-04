@@ -26,6 +26,16 @@ admin.site.register(User, UserAdmin)
 
 
 class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('profile_email', 'organization_name', 'profile_username')
+
+    def profile_email(self, obj):
+        return obj.user_obj.email
+    profile_email.short_description = 'Email'
+
+    def profile_username(self, obj):
+        return obj.user_obj.username
+    profile_username.short_description = 'Username'
+
     def has_delete_permission(self, request, obj=None):
         return False  # Disable the delete action for Profile
 

@@ -45,10 +45,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
+# `user_obj` is by default the email of the User
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    organization_name = models.CharField(max_length=100)
+    user_obj = models.OneToOneField(User, on_delete=models.CASCADE)
+    organization_name = models.CharField(max_length=100, blank=False, null=False)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f'{self.user_obj.username} Profile'
