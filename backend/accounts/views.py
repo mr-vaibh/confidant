@@ -1,3 +1,17 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import User, Profile
+from .serializers import UserSerializer, ProfileSerializer
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
