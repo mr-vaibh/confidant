@@ -14,8 +14,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_('The Email field must be set'))
         email = self.normalize_email(email)
-        username = generate_random_username()
-        user = self.model(email=email, username=username, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -28,7 +27,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=150, unique=True, blank=True, null=True)
+    username = models.CharField(max_length=150, default=generate_random_username, unique=True, blank=False, null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -36,11 +35,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []  # Email and password are required by default.
 
     objects = UserManager()
-
-    def save(self, *args, **kwargs):
-        if not self.username:  # If username is not set
-            self.username = generate_random_username()
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
