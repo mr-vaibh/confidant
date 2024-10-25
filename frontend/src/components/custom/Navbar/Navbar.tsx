@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import ThemeLink from "./ThemeLink";
 import ToggleLink from "./ToggleLink";
 import NavMenu from "./NavMenu";
@@ -12,9 +13,9 @@ const Navbar: React.FC = () => {
   return (
     <nav className="flex flex-col nav:flex-row justify-between items-center p-4 bg-white dark:bg-gray-900 shadow-md w-full">
       <div className="flex justify-between items-center w-full nav:w-auto">
-        <a href="/" className="font-bold text-lg text-gray-900 dark:text-gray-100">
+        <Link href="/" className="font-bold text-lg text-gray-900 dark:text-gray-100">
           Confidant
-        </a>
+        </Link>
 
         {/* Responsive Toggle Button */}
         <ToggleLink isOpen={isOpen} handleToggle={handleToggle} />
