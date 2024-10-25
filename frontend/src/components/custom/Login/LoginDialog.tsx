@@ -11,8 +11,10 @@ export default function LoginDialog({
 }: Readonly<{ children?: ReactNode }>) {
   const router = useRouter();
 
-  const handleOpenChange = () => {
-    router.back();
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      router.back();
+    }
   };
 
   return (
