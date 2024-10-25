@@ -13,7 +13,7 @@ router.register(r'users', UserViewSet)
 router.register(r'profiles', ProfileViewSet)
 
 urlpatterns = [
-    path('api/', api_root, name='api_root'),  # Add the custom view here
+    path('api/', api_root, name='api_root'),
     path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
