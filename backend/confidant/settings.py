@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'accounts',
 
     # Libraries
+    'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -62,6 +63,9 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    # Corsheaders middleware
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,10 +156,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SITE_NAME = "Confidant"
+
 # JWT settings (optional, for customizing token behavior)
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
