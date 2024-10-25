@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 
 export default function LoginContent() {
   return (
-    <div className="grid gap-4 py-4">
+    <section className="grid gap-4 py-4">
       <div className="grid grid-cols-4 items-center gap-4">
         <Label htmlFor="email" className="text-right">
           Email
@@ -16,6 +16,6 @@ export default function LoginContent() {
         </Label>
         <Input type="password" id="password" placeholder="••••••••" className="col-span-3" />
       </div>
-    </div>
+    </section>
   );
 }
