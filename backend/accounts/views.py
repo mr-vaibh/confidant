@@ -1,18 +1,21 @@
-from rest_framework import viewsets
-from .models import User, Profile
-from .serializers import UserSerializer, ProfileSerializer
-from rest_framework.authentication import SessionAuthentication
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-
 from django.shortcuts import get_object_or_404
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
-from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
+from .serializers import UserSerializer, ProfileSerializer
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+
+from rest_framework import status
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from .models import User, Profile
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -35,7 +38,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff or self.request.user.is_superuser:
             return Profile.objects.all()
         return Profile.objects.filter(user_obj=self.request.user)
-
 
 class ActivationView(APIView):
     permission_classes = [AllowAny]
@@ -60,3 +62,16 @@ class ActivationView(APIView):
 
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_200_OK)
+        except (ObjectDoesNotExist, TokenError):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
