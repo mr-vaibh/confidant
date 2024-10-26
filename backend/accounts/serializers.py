@@ -1,14 +1,14 @@
 # account/serializers.py
 
-from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer
 from .models import User, Profile
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(UserCreateSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'username', 'is_active', 'is_staff']
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(UserCreateSerializer):
     user_obj = UserSerializer()
 
     class Meta:
