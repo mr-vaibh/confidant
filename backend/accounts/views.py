@@ -3,7 +3,22 @@ from .models import User, Profile
 from .serializers import UserSerializer, ProfileSerializer
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from django.shortcuts import get_object_or_404
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth import get_user_model
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'username': request.user.username})
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -26,3 +41,28 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff or self.request.user.is_superuser:
             return Profile.objects.all()
         return Profile.objects.filter(user_obj=self.request.user)
+
+
+class ActivationView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uidb64, token):
+        try:
+            # Decode the UID and get the user
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = get_object_or_404(User, pk=uid)
+
+            # Check if the token is valid
+            if user.is_active:
+                return Response({'detail': 'Account already activated.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Activate the user (mark them as active)
+            if user.check_activation_token(token):
+                user.is_active = True
+                user.save()
+                return Response({'detail': 'Account activated successfully.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'detail': 'Invalid activation token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
