@@ -2,6 +2,7 @@ import random
 import string
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.tokens import default_token_generator
 from django.utils.translation import gettext_lazy as _
 
 def generate_random_username(length=4):
@@ -38,6 +39,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def check_activation_token(self, token):
+        return default_token_generator.check_token(self, token)
 
 # `user_obj` is by default the email of the User
 class Profile(models.Model):
