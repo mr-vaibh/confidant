@@ -26,17 +26,3 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff or self.request.user.is_superuser:
             return Profile.objects.all()
         return Profile.objects.filter(user_obj=self.request.user)
-
-
-# For /api/ list of URLS
-from django.http import JsonResponse
-from django.urls import reverse
-
-def api_root(request):
-    return JsonResponse({
-        'users': reverse('user-list'),  # Replace 'user-list' with your UserViewSet's list name
-        'profiles': reverse('profile-list'),  # Replace 'profile-list' with your ProfileViewSet's list name
-        'token_obtain': reverse('token_obtain_pair'),
-        'token_refresh': reverse('token_refresh'),
-        'token_verify': reverse('token_verify'),
-    })
