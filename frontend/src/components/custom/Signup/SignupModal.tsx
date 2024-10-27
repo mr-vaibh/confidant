@@ -19,10 +19,6 @@ export default function SignupModal() {
       </DialogHeader>
 
       <SignupContent />
-
-      <DialogFooter>
-        <Button type="submit">Get Started</Button>
-      </DialogFooter>
     </DialogContent>
   )
 }

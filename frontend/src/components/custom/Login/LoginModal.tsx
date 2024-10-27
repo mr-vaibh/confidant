@@ -19,10 +19,6 @@ export default function LoginModal() {
       </DialogHeader>
 
       <LoginContent />
-
-      <DialogFooter>
-        <Button type="submit">Login</Button>
-      </DialogFooter>
     </DialogContent>
   )
 }
