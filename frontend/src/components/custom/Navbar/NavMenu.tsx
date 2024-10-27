@@ -2,7 +2,6 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   NavigationMenu,
@@ -17,6 +16,8 @@ import {
 import components from "./LinkData";
 import Login from "@/components/custom/Login/Login";
 import Signup from "@/components/custom/Signup/Signup";
+
+import { UserProvider } from '@/context/UserContext';
 
 function NavMenu() {
   return (
@@ -87,8 +88,11 @@ function NavMenu() {
           </Link>
         </NavigationMenuItem>
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
-        <Login />
-        <Signup />
+
+        <UserProvider>
+          <Login />
+          <Signup />
+        </UserProvider>
       </NavigationMenuList>
     </NavigationMenu>
   );

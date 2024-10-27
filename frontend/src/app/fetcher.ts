@@ -36,25 +36,18 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // If the error is 401, try to refresh the token
+    // Inside the response interceptor
     if (error.response.status === 401) {
       try {
-        const { access } = (await handleJWTRefresh()).data as {
-          access: string;
-        };
-
-        // Store the new access token
+        const { access } = (await handleJWTRefresh()).data as { access: string };
         storeToken(access, "access");
-
-        // Set the new token in the original request's headers
         originalRequest.headers.Authorization = `Bearer ${access}`;
-
-        // Retry the original request with the new token
         return api(originalRequest);
       } catch (err) {
-        // If refreshing fails, redirect to login
-        window.location.replace("/login");
+        return Promise.reject(new Error("Unauthorized"));
       }
     }
+
 
     return Promise.reject(error);
   }
