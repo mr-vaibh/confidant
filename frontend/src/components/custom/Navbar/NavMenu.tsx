@@ -17,9 +17,11 @@ import components from "./LinkData";
 import Login from "@/components/custom/Login/Login";
 import Signup from "@/components/custom/Signup/Signup";
 
-import { UserProvider } from '@/context/UserContext';
+import { UserProvider, useUser } from '@/context/UserContext';
 
 function NavMenu() {
+  const { user, setUser } = useUser();
+
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex flex-wrap nav:flex-nowrap">
@@ -88,11 +90,12 @@ function NavMenu() {
           </Link>
         </NavigationMenuItem>
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
-
-        <UserProvider>
-          <Login />
-          <Signup />
-        </UserProvider>
+        {user ? <span>{user?.email}</span> :
+          <>
+            <Login />
+            <Signup />
+          </>
+        }
       </NavigationMenuList>
     </NavigationMenu>
   );

@@ -8,7 +8,7 @@ import { fetcher } from '@/app/fetcher';
 interface User {
   id: number;
   username: string;
-  // Add other user properties as needed
+  email: string;
 }
 
 interface UserContextType {

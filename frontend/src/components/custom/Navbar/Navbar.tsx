@@ -5,6 +5,7 @@ import Link from "next/link";
 import ThemeLink from "./ThemeLink";
 import ToggleLink from "./ToggleLink";
 import NavMenu from "./NavMenu";
+import { UserProvider } from "@/context/UserContext";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,10 +28,12 @@ const Navbar: React.FC = () => {
       <div
         className={`nav:flex flex-col nav:flex-row items-center w-full nav:w-auto ${
           isOpen ? "block" : "hidden"
-        }`}
+          }`}
       >
         <div className="flex flex-col nav:flex-row items-center w-full nav:w-auto">
-          <NavMenu />
+          <UserProvider>
+            <NavMenu />
+          </UserProvider>
         </div>
       </div>
     </nav>

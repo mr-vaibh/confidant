@@ -49,11 +49,14 @@ export default function LoginContent() {
         router.push("dashboard");
       })
       .catch((err) => {
+        // TODO: Handle error, it just has a key of 'message'
+        // also do it for the signup form
+        console.log(err);
         const errorData = err.response.data;
-        for (let key in errorData) {
-          const typedKey = key as "email" | "password" | `root.${string}` | "root";
-          setError(typedKey, { type: "manual", message: errorData[key][0] });
-        }
+        // for (let key in errorData) {
+        //   const typedKey = key as "email" | "password" | `root.${string}` | "root";
+        //   setError(typedKey, { type: "manual", message: errorData[key][0] });
+        // }
 
         setError("root", { type: "manual", message: errorData.detail });
       });
