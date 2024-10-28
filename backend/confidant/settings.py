@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     # Libraries
     'corsheaders',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
+    # 'rest_framework_simplejwt.token_blacklist',
     'djoser'
 ]
 
