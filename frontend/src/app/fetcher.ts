@@ -53,7 +53,13 @@ api.interceptors.response.use(
   }
 );
 
-// Fetcher function to make GET requests
-export const fetcher = (url: string): Promise<any> => {
-  return api.get(url).then((response) => response.data);
+// Fetcher function to make various types of requests with default method as GET
+export const fetcher = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET', data?: any): Promise<any> => {
+  const config = {
+    method,
+    url,
+    data,
+  };
+
+  return api(config).then((response) => response.data);
 };
