@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const router = useRouter();
-
-  const { data: user } = useSWR("/auth/users/me", fetcher);
+  const { data: user, isLoading, error } = useSWR("/auth/users/me", fetcher);
 
   const { logout, removeTokens } = AuthActions();
 
@@ -23,6 +22,9 @@ export default function Dashboard() {
         router.push("/login");
       });
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading user data.</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
