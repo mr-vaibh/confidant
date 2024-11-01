@@ -179,6 +179,8 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
 
+FRONTEND_PORT = os.environ.get('FRONTEND_PORT')
+
 # Djoser settings
 DJOSER = {
     'LOGIN_FIELD': 'email',
@@ -192,12 +194,16 @@ DJOSER = {
     'LOGOUT_ON_PASSWORD_CHANGE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
-    'ACTIVATION_EMAIL_TEMPLATE': 'accounts/email/activation.html',
     'TOKEN_MODEL': None,
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
         'user': 'accounts.serializers.UserCreateSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    # https://stackoverflow.com/questions/69326797/how-to-change-default-password-reset-email-in-djoser
+    'EMAIL': {
+        'activation': 'accounts.views.email.CustomActivationEmail',
+        'password_reset': 'accounts.views.email.CustomPasswordResetEmail'
     },
 }
 
