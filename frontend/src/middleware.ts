@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken");
 
-  if (!accessToken && request.nextUrl.pathname !== "/login") {
+  if (!accessToken && request.nextUrl.pathname !== "/login" && request.nextUrl.pathname !== "/signup") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }

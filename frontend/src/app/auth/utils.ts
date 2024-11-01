@@ -56,6 +56,10 @@ const handleJWTRefresh = () => {
     return api.post("/auth/jwt/refresh/", { refresh: refreshToken });
 };
 
+const verifyToken = (token: string) => {
+    return api.post("/auth/jwt/verify/", { token });
+};
+
 const resetPassword = (email: string) => {
     return api.post("/auth/users/reset_password/", { email });
 };
@@ -79,6 +83,7 @@ export const AuthActions = () => {
         login,
         resetPasswordConfirm,
         handleJWTRefresh,
+        verifyToken,
         register,
         resetPassword,
         storeToken,

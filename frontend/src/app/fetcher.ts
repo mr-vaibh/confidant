@@ -44,6 +44,10 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return api(originalRequest);
       } catch (err) {
+        // If the refresh token is expired, log the user out
+        if (window.location.pathname !== "/login" && window.location.pathname !== "/signup") {
+          window.location.replace("/login");
+        }
         return Promise.reject(new Error("Unauthorized"));
       }
     }
