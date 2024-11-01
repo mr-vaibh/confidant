@@ -5,9 +5,15 @@ import { fetcher } from "@/app/fetcher";
 import { AuthActions } from "@/app/auth/utils";
 import { useRouter } from "next/navigation";
 
+// Define the user type
+interface User {
+  username: string;
+  email: string;
+}
+
 export default function Dashboard() {
   const router = useRouter();
-  const { data: user, isLoading, error } = useSWR("/auth/users/me", fetcher);
+  const { data: user, isLoading, error } = useSWR<User>("/auth/users/me", fetcher); // Specify the type here
 
   const { logout, removeTokens } = AuthActions();
 
