@@ -23,15 +23,15 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="REST APIs",
+        title="Confidant REST APIs",
         default_version='v1',
         description="API documentation",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
+        terms_of_service="#",
+        contact=openapi.Contact(email="shuklavaibhav336@gmail.com"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(permissions.IsAdminUser,),
 )
 
 urlpatterns = [
