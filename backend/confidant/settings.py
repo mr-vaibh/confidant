@@ -42,13 +42,21 @@ INSTALLED_APPS = [
 
     # Local
     'accounts',
+    'vars',
 
     # Libraries
     'corsheaders',
     'rest_framework',
     # 'rest_framework_simplejwt.token_blacklist',
-    'djoser'
+    'djoser',
+    'drf_yasg',
 ]
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_FIELD_INSPECTORS': [
+        # 'drf_yasg.inspectors.CamelCaseJSONFilter',
+    ],
+}
 
 AUTH_USER_MODEL = 'accounts.User'
 
