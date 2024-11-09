@@ -6,6 +6,7 @@ from .models import EnvironmentVariable, VariableVersion
 class EnvironmentVariableAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'latest_version', 'created_by', 'created_at', 'updated_at')
     list_filter = ('created_by', 'created_at', 'updated_at')
+    list_display_links = ['name']  # Make the `name` field clickable
     search_fields = ('name', 'description')
     readonly_fields = ('latest_version', 'created_at', 'updated_at', 'created_by')
 

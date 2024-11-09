@@ -203,11 +203,6 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'TOKEN_MODEL': None,
-    'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user': 'accounts.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-    },
     # https://stackoverflow.com/questions/69326797/how-to-change-default-password-reset-email-in-djoser
     'EMAIL': {
         'activation': 'accounts.views.email.CustomActivationEmail',

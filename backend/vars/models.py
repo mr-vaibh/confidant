@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class EnvironmentVariable(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -25,6 +25,9 @@ class EnvironmentVariable(models.Model):
         ordering = ['-created_at']
         verbose_name = "Environment Variable"
         verbose_name_plural = "Environment Variables"
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'created_by'], name='unique_name_per_user')
+        ]
 
     def __str__(self):
         return f"{self.name} (Latest version: {self.latest_version.version if self.latest_version else 'None'})"

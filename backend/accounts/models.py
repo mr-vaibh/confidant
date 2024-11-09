@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # `user_obj` is by default the email of the User
 class Profile(models.Model):
-    user_obj = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_obj = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     organization_name = models.CharField(max_length=100, blank=False, null=False)
 
     def __str__(self):
