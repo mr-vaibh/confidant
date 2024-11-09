@@ -7,9 +7,9 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import EnvironmentVariable, VariableVersion
 from .serializers import EnvironmentVariableSerializer, VariableVersionSerializer
-from .mixins import UserQuerysetMixin
+from .mixins import VarsQuerysetMixin
 
-class EnvironmentVariableViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
+class EnvironmentVariableViewSet(VarsQuerysetMixin, viewsets.ModelViewSet):
     queryset = EnvironmentVariable.objects.all()
     serializer_class = EnvironmentVariableSerializer
     authentication_classes = [SessionAuthentication, JWTAuthentication]
@@ -18,7 +18,7 @@ class EnvironmentVariableViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
-class VariableVersionViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
+class VariableVersionViewSet(VarsQuerysetMixin, viewsets.ModelViewSet):
     queryset = VariableVersion.objects.all()
     serializer_class = VariableVersionSerializer
     authentication_classes = [SessionAuthentication, JWTAuthentication]
