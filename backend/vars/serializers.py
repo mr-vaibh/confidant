@@ -11,7 +11,7 @@ class EnvironmentVariableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EnvironmentVariable
-        fields = ['id', 'name', 'created_by', 'created_at', 'versions']
+        fields = "__all__"
         extra_kwargs = {
             'created_by': {'required': False, 'read_only': True}  # Make created_by optional and read-only
         }

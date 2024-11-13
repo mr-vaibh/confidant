@@ -30,7 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
+          <main className="flex flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
             <Navbar />
             {children}
             {login}

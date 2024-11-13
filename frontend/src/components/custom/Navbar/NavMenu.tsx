@@ -16,8 +16,10 @@ import {
 import components from "./LinkData";
 import Login from "@/components/custom/Login/Login";
 import Signup from "@/components/custom/Signup/Signup";
+import LogoutButton from "@/components/custom/Dashboard/LogoutButton";
 
-import { UserProvider, useUser } from '@/context/UserContext';
+import { useUser } from '@/context/UserContext';
+import { CircleUserRound } from "lucide-react";
 
 function NavMenu() {
   const { user, setUser } = useUser();
@@ -90,7 +92,28 @@ function NavMenu() {
           </Link>
         </NavigationMenuItem>
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
-        {user ? <span>{user?.email}</span> :
+        {user
+          ?
+          <>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger><CircleUserRound /></NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-3 p-4 ">
+                  <ListItem
+                    key={1}
+                    title={user?.username.toUpperCase()}
+                    href="/profile"
+                  >
+                    {user?.email}
+                  </ListItem>
+                  <ListItem>
+                    <LogoutButton />
+                  </ListItem>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </>
+          :
           <>
             <Login />
             <Signup />

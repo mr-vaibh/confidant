@@ -1,6 +1,7 @@
 # views.py
 
 from rest_framework import viewsets, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
@@ -30,3 +31,9 @@ class VariableVersionViewSet(VarsQuerysetMixin, viewsets.ModelViewSet):
         # Auto-increment version number based on existing versions
         latest_version = VariableVersion.objects.filter(variable=variable).count() + 1
         serializer.save(variable=variable, version=latest_version, created_by=self.request.user)
+
+class VariableVersionsListView(APIView):
+    def get(self, request, variable_id):
+        versions = VariableVersion.objects.filter(variable_id=variable_id).order_by('-created_at')
+        serializer = VariableVersionSerializer(versions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
