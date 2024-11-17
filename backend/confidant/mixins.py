@@ -13,8 +13,4 @@ class BaseUserFilterMixin:
 
         current_user = self.request.user.id if self.user_field_name == 'id' else self.request.user
 
-        # TODO: research if .is_superuser is necessary or not
-        if not self.request.user.is_staff:
-            # Ensure the user field is present on the model
-            queryset = queryset.filter(**{self.user_field_name: current_user})
-        return queryset
+        return queryset.filter(**{self.user_field_name: current_user})
