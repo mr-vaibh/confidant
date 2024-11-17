@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'vars',
+    'keys',
 
     # Libraries
     'corsheaders',
