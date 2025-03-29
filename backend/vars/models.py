@@ -73,3 +73,11 @@ class VariableVersion(models.Model):
 
     def __str__(self):
         return f"{self.variable.name} v{self.version}"
+    
+    def delete(self, *args, **kwargs):
+        if self == self.variable.latest_version:
+            all_versions = list(VariableVersion.objects.filter(variable=self.variable).order_by('-created_at'))
+            self.variable.latest_version = all_versions[1] if len(all_versions) > 1 else None
+            self.variable.save()
+
+        super(VariableVersion, self).delete(*args, **kwargs)

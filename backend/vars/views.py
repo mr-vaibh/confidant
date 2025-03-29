@@ -36,9 +36,9 @@ class VariableVersionViewSet(VarsQuerysetMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Retrieve the variable instance to associate with the new version
         variable = EnvironmentVariable.objects.get(id=self.request.data['variable_id'])
-        # Auto-increment version number based on existing versions
-        latest_version = VariableVersion.objects.filter(variable=variable).count() + 1
-        serializer.save(variable=variable, version=latest_version, created_by=self.request.user)
+        # Use ternary operator to determine version
+        version = self.request.data.get('version') or (VariableVersion.objects.filter(variable=variable).count() + 1)
+        serializer.save(variable=variable, version=version, created_by=self.request.user)
 
 class VariableVersionsListView(APIView):
     def get(self, request, variable_id):
