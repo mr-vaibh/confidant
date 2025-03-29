@@ -43,7 +43,7 @@ const VariablesPage: React.FC = () => {
     return (
         <div className="container mx-auto p-8">
             <h1 className="text-2xl font-bold mb-6">Variables List</h1>
-            
+
             {loading && <p>Loading...</p>}
 
             <table className="min-w-full bg-white border border-gray-200 shadow-lg">
@@ -75,7 +75,7 @@ const VariablesPage: React.FC = () => {
                                     )}
                                 </td>
                                 <td className="px-4 py-2 border-b">
-                                    <VariableDetailsDialog variable={variable}>
+                                    <VariableDetailsDialog variable={variable} refreshVariables={fetchVariables}>
                                         <span className="text-blue-600 cursor-pointer">View Versions</span>
                                     </VariableDetailsDialog>
                                     <button

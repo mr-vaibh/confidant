@@ -8,9 +8,10 @@ import { fetcher } from '@/app/fetcher';
 interface VariableDetailsDialogProps {
   variable: Variable;
   children: ReactNode;
+  refreshVariables: () => void;  // ✅ Accept refresh function
 }
 
-const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable, children }) => {
+const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable, children, refreshVariables }) => {
   const [versions, setVersions] = useState<Version[]>([]);
   const [loading, setLoading] = useState(false);
   const [newVersion, setNewVersion] = useState('');
@@ -29,20 +30,6 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
     fetchVersions();
   }, [variable.id]);
 
-  const handleDelete = async (versionId: number) => {
-    if (!window.confirm('Are you sure you want to delete this version?')) return;
-
-    try {
-      setLoading(true);
-      await fetcher(`/versions/${versionId}/`, 'DELETE');
-      setVersions((prev) => prev.filter((version) => version.id !== versionId));
-    } catch (error) {
-      console.error('Error deleting version:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleAddVersion = async () => {
     if (!newValue) {
       alert('Please enter both some value.');
@@ -54,13 +41,15 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
       const newEntry = await fetcher(`/versions/`, 'POST', {
         version: newVersion,
         value: newValue,
-        created_by: variable.created_by, // ✅ Auto-set the creator
-        variable_id: variable.id, // ✅ Explicitly link the version to the variable
+        created_by: variable.created_by,
+        variable_id: variable.id, 
       });
 
       setVersions((prev) => [newEntry, ...prev]); // ✅ Add new version at the top
       setNewVersion('');
       setNewValue('');
+
+      refreshVariables();  // ✅ Update the Variables List table
     } catch (error) {
       console.error('Error adding version:', error);
     } finally {
@@ -81,7 +70,8 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
           <DialogDescription>Previous versions and values for this variable</DialogDescription>
         </DialogHeader>
 
-        <div className="p-4 max-h-[400px] overflow-auto border-b"> {/* 🔥 Make table scrollable */}
+        {/* Versions Table */}
+        <div className="p-4 max-h-[400px] overflow-auto border-b">
           {versions.length > 0 ? (
             <table className="min-w-full bg-white border border-gray-200 shadow-lg">
               <thead>
@@ -102,8 +92,8 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDelete(version.id)}
                         disabled={loading}
+                        onClick={() => handleDelete(version.id)}
                       >
                         {loading ? 'Deleting...' : 'Delete'}
                       </Button>
