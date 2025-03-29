@@ -1,14 +1,9 @@
-// src/app/fetcher.ts
-
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { AuthActions } from "@/app/auth/utils";
-
 import publicPaths from "@/publicPaths";
 
-// Extract necessary functions from the AuthActions utility.
 const { handleJWTRefresh, storeToken, getToken } = AuthActions();
 
-// Create an Axios instance with default settings
 const api = axios.create({
   baseURL: "http://localhost:8000/api",
   headers: {
@@ -25,9 +20,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor to handle 401 errors
@@ -36,16 +29,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If the error is 401, try to refresh the token
-    // Inside the response interceptor
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       try {
         const { access } = (await handleJWTRefresh()).data as { access: string };
         storeToken(access, "access");
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return api(originalRequest);
       } catch (err) {
-        // If the refresh token is expired, log the user out
         const isPublicPath = publicPaths.includes(window.location.pathname);
         if (!isPublicPath) {
           window.location.replace("/login");
@@ -54,26 +44,41 @@ api.interceptors.response.use(
       }
     }
 
-
     return Promise.reject(error);
   }
 );
 
-// Fetcher function
-export const fetcher = async <T>(url: string, method: 'GET' | 'POST' = 'GET', data?: any, noAuth: boolean = false): Promise<T> => {
+/**
+ * Generalized fetcher function supporting all HTTP methods.
+ * @param url - API endpoint.
+ * @param method - HTTP method (GET, POST, PUT, PATCH, DELETE).
+ * @param data - Optional payload for POST, PUT, PATCH.
+ * @param noAuth - Whether to bypass authentication.
+ * @returns Response data.
+ */
+export const fetcher = async <T>(
+  url: string,
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
+  data?: any,
+  noAuth: boolean = false
+): Promise<T> => {
   try {
-    const response = method === 'POST'
-      ? await api.post<T>(url, data, { headers: { noAuth } })
-      : await api.get<T>(url, { headers: { noAuth } });
+    const config: AxiosRequestConfig = {
+      method,
+      url,
+      headers: { noAuth },
+      data: ["POST", "PUT", "PATCH"].includes(method) ? data : undefined,
+    };
 
+    const response = await api(config);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Axios error:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'An error occurred while fetching data.');
+      console.error("Axios error:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "An error occurred while fetching data.");
     } else {
-      console.error('Unexpected error:', error);
-      throw new Error('An unexpected error occurred.');
+      console.error("Unexpected error:", error);
+      throw new Error("An unexpected error occurred.");
     }
   }
 };
