@@ -47,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user_obj = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     organization_name = models.CharField(max_length=100, blank=False, null=False)
+    public_key = models.TextField(blank=True, null=True)  # 🔥 Added public key field
 
     def __str__(self):
         return f'{self.user_obj.username} Profile'
