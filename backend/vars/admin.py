@@ -25,8 +25,7 @@ class EnvironmentVariableAdmin(admin.ModelAdmin):
         model = VariableVersion
         extra = 0  # No extra empty rows
         fields = ('version', 'value', 'created_at', 'created_by')
-        readonly_fields = ('version', 'value', 'created_at', 'created_by')
-        can_delete = False
+        readonly_fields = ('created_at', 'created_by')
 
     inlines = [VariableVersionInline]
 
