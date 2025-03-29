@@ -33,7 +33,7 @@ class EnvironmentVariableAdmin(admin.ModelAdmin):
     list_filter = ('created_by', 'created_at', 'updated_at')
     list_display_links = ['name']  # Make the `name` field clickable
     search_fields = ('name', 'description')
-    readonly_fields = ('latest_version', 'created_at', 'updated_at', 'created_by')
+    readonly_fields = ('latest_version', 'created_at', 'updated_at')
 
     # Organize fields in sections
     fieldsets = (
