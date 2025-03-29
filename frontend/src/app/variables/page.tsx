@@ -3,15 +3,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VariableDetailsDialog from "@/components/custom/Variables/VariableDetailsDialog";
-import { Variable } from "@/types";
+import { Variable, Version } from "@/types"; // Ensure proper type imports
 import { fetcher } from "@/app/fetcher";
 
 const VariablesPage: React.FC = () => {
-    const [variables, setVariables] = useState<Variable[]>([]);
+    const [variables, setVariables] = useState<Variable[]>([]); // Ensuring variable type safety
     const [loading, setLoading] = useState<boolean>(false);
 
     // Fetch variables function
-    const fetchVariables = useCallback(async () => {
+    const fetchVariables = useCallback(async (): Promise<void> => {
         try {
             setLoading(true);
             const data = await fetcher<Variable[]>("/variables");
@@ -29,16 +29,17 @@ const VariablesPage: React.FC = () => {
     }, [fetchVariables]);
 
     // Function to delete a variable version
-    const handleDelete = async (variableId: string, versionId: string) => {
+    const handleDelete = async (variableId: number, versionId: string): Promise<void> => {
         try {
             await fetcher(`/versions/${versionId}/`, "DELETE");
-
+    
             // Refetch data after deletion
             fetchVariables();
         } catch (error) {
             console.error("Error deleting version:", error);
         }
     };
+    
 
     return (
         <div className="container mx-auto p-8">
@@ -57,7 +58,7 @@ const VariablesPage: React.FC = () => {
                 </thead>
                 <tbody>
                     {variables.map((variable) => {
-                        const latestVersion = variable.versions.find(
+                        const latestVersion: Version | undefined = variable.versions.find(
                             (version) => version.id === variable.latest_version
                         );
 
@@ -79,7 +80,7 @@ const VariablesPage: React.FC = () => {
                                         <span className="text-blue-600 cursor-pointer">View Versions</span>
                                     </VariableDetailsDialog>
                                     <button
-                                        onClick={() => handleDelete(variable.id, variable.latest_version)}
+                                        onClick={() => handleDelete(String(variable.id), String(variable.latest_version))}
                                         className="ml-4 text-red-600"
                                     >
                                         Delete Latest
