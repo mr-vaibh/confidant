@@ -3,7 +3,7 @@
 export interface Version {
     id: number;
     value: string;
-    version: string;
+    version: { id: string | number; value: string };
     created_at: string;
     created_by: number;
 }
@@ -15,6 +15,6 @@ export interface Variable {
     created_at: string;
     updated_at: string;
     created_by: number;
-    latest_version: number;
+    latest_version: number | string;
     versions: Version[];
 }

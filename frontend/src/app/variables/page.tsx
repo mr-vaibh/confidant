@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import toast from "react-hot-toast";
 import VariableDetailsDialog from "@/components/custom/Variables/VariableDetailsDialog";
 import { Variable, Version } from "@/types"; // Ensure proper type imports
 import { fetcher } from "@/app/fetcher";
@@ -17,6 +17,7 @@ const VariablesPage: React.FC = () => {
             const data = await fetcher<Variable[]>("/variables");
             setVariables(data);
         } catch (error) {
+            toast.error("Error fetching variables:");
             console.error("Error fetching variables:", error);
         } finally {
             setLoading(false);
@@ -80,7 +81,7 @@ const VariablesPage: React.FC = () => {
                                         <span className="text-blue-600 cursor-pointer">View Versions</span>
                                     </VariableDetailsDialog>
                                     <button
-                                        onClick={() => handleDelete(String(variable.id), String(variable.latest_version))}
+                                        onClick={() => handleDelete(variable.id, String(variable.latest_version))}
                                         className="ml-4 text-red-600"
                                     >
                                         Delete Latest

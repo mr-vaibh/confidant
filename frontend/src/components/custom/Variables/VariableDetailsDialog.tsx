@@ -38,7 +38,7 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
   
     try {
       setLoading(true);
-      const newEntry = await fetcher(`/versions/`, 'POST', {
+      const newEntry: Version = await fetcher<Version>(`/versions/`, 'POST', {
         version: newVersion,
         value: newValue,
         created_by: variable.created_by,
@@ -52,6 +52,20 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
       refreshVariables();  // ✅ Update the Variables List table
     } catch (error) {
       console.error('Error adding version:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (versionId: number) => {
+    if (!window.confirm('Are you sure you want to delete this version?')) return;
+
+    try {
+      setLoading(true);
+      await fetcher(`/versions/${versionId}/`, 'DELETE');
+      setVersions((prev) => prev.filter((version) => version.id !== versionId));
+    } catch (error) {
+      console.error('Error deleting version:', error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +99,7 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
               <tbody>
                 {versions.map((version) => (
                   <tr key={version.id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 border-b">{version.version}</td>
+                    <td className="px-4 py-2 border-b">{String(version.version)}</td>
                     <td className="px-4 py-2 border-b">{version.value}</td>
                     <td className="px-4 py-2 border-b">{new Date(version.created_at).toLocaleDateString()}</td>
                     <td className="px-4 py-2 border-b">
