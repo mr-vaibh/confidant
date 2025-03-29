@@ -2,24 +2,13 @@ from django.contrib import admin
 from django import forms
 from .models import EnvironmentVariable, VariableVersion
 
-# Custom formset for VariableVersion
-class VariableVersionInlineFormSet(forms.models.BaseInlineFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Access the request object and set created_by to the user of the related EnvironmentVariable
-        for form in self.forms:
-            if form.instance.pk is not None:  # Check if it's a new instance (not yet saved)
-                environment_variable = form.instance.variable
-                if environment_variable:  # Ensure there's a valid related EnvironmentVariable
-                    form.initial['created_by'] = environment_variable.created_by
 
 # Inline for VariableVersion
 class VariableVersionInline(admin.TabularInline):
     model = VariableVersion
     extra = 0  # No extra empty rows
     fields = ('version', 'value', 'created_at', 'created_by')
-    readonly_fields = ('created_at', 'created_by')
-    formset = VariableVersionInlineFormSet  # Use the custom formset
+    readonly_fields = ('created_at',)
 
     def get_formset_kwargs(self, request, obj=None, **kwargs):
         # Pass the request object to the formset so we can use it in the form initialization
