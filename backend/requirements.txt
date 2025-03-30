@@ -3,5 +3,6 @@ django-dotenv
 django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
+django-extensions
 djoser
 psycopg2
