@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { AuthActions } from "@/app/auth/utils";
 import { useRouter } from "next/navigation";
@@ -52,6 +53,7 @@ export default function LoginContent() {
         // TODO: Handle error, it just has a key of 'message'
         // also do it for the signup form
         console.log(err);
+        toast.error("Login failed. Please check your credentials.");
         const errorData = err.response.data;
         // for (let key in errorData) {
         //   const typedKey = key as "email" | "password" | `root.${string}` | "root";

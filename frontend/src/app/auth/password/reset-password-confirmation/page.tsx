@@ -6,7 +6,7 @@ import ResetPasswordConfirmation from "@/components/custom/ResetPasswordConfirma
 export default function Home() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <main>
+      <main className="w-full">
         <ResetPasswordConfirmation />
       </main>
     </Suspense>

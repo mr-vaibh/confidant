@@ -3,7 +3,6 @@ import React from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
 
 import Navbar from "@/components/custom/Navbar/Navbar";
@@ -28,20 +27,13 @@ export default function RootLayout({
     <React.StrictMode>
       <html lang="en">
         <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Toaster position="top-right" />
-            <main className="flex flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
-              <Navbar />
-              {children}
-              {login}
-              {signup}
-            </main>
-          </ThemeProvider>
+          <Toaster position="top-right" />
+          <main className="flex flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
+            <Navbar />
+            {children}
+            {login}
+            {signup}
+          </main>
         </body>
       </html>
     </React.StrictMode>

@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,8 +15,6 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import components from "./LinkData";
-import Login from "@/components/custom/Login/Login";
-import Signup from "@/components/custom/Signup/Signup";
 import LogoutButton from "@/components/custom/Dashboard/LogoutButton";
 
 import { useUser } from '@/context/UserContext';
@@ -94,29 +93,35 @@ function NavMenu() {
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
         {user
           ?
-          <>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger><CircleUserRound /></NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[200px] gap-3 p-4 ">
-                  <ListItem
-                    key={1}
-                    title={user?.username.toUpperCase()}
-                    href="/profile"
-                  >
-                    {user?.email}
-                  </ListItem>
-                  <ListItem>
-                    <LogoutButton />
-                  </ListItem>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger><CircleUserRound /></NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[200px] gap-3 p-4 ">
+                <ListItem
+                  key={1}
+                  title={user?.username.toUpperCase()}
+                  href="/profile"
+                >
+                  {user?.email}
+                </ListItem>
+                <ListItem>
+                  <LogoutButton />
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
           :
           <>
-            <Login />
-            <Signup />
+            <Link href="/login">
+              <Button className="md:mr-2 mt-4 md:mt-0" variant="link">
+                Log in
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button className="md:mr-2 mt-4 md:mt-0">
+                Signup
+              </Button>
+            </Link>
           </>
         }
       </NavigationMenuList>

@@ -4,7 +4,7 @@ import ResetPassword from "@/components/custom/ResetPassword";
 
 export default function Home() {
   return (
-    <main>
+    <main className="w-full">
       <ResetPassword />
     </main>
   );

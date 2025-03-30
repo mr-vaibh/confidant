@@ -66,7 +66,7 @@ const VariablesPage: React.FC = () => {
                         return (
                             <tr key={variable.id} className="hover:bg-gray-100">
                                 <td className="px-4 py-2 border-b">{variable.name}</td>
-                                <td className="px-4 py-2 border-b">{variable.description || "-"}</td>
+                                <td className="px-4 py-2 border-b">{variable.description ?? "-"}</td>
                                 <td className="px-4 py-2 border-b">
                                     {latestVersion ? (
                                         latestVersion.value

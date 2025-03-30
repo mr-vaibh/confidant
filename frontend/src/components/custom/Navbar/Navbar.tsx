@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import ThemeLink from "./ThemeLink";
 import ToggleLink from "./ToggleLink";
 import NavMenu from "./NavMenu";
 import { UserProvider } from "@/context/UserContext";
@@ -20,9 +19,6 @@ const Navbar: React.FC = () => {
 
         {/* Responsive Toggle Button */}
         <ToggleLink isOpen={isOpen} handleToggle={handleToggle} />
-
-        {/* Theme Toggle Button */}
-        <ThemeLink />
       </div>
 
       <div
