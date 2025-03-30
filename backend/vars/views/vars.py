@@ -1,7 +1,5 @@
 # views.py
 
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -9,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .models import EnvironmentVariable, VariableVersion
-from .serializers import EnvironmentVariableSerializer, VariableVersionSerializer
-from .mixins import VarsQuerysetMixin
+from ..models import EnvironmentVariable, VariableVersion
+from ..serializers import EnvironmentVariableSerializer, VariableVersionSerializer
+from ..mixins import VarsQuerysetMixin
 
 import json
 from Crypto.Cipher import PKCS1_OAEP

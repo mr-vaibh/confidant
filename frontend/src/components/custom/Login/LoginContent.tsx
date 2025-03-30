@@ -20,6 +20,7 @@ type FormData = {
 
 export default function LoginContent() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Added loading state
 
   const {
     register,
@@ -41,6 +42,7 @@ export default function LoginContent() {
   }
 
   const onSubmit = (data: FormData) => {
+    setIsLoading(true); // Start loading when submit is clicked
     login(data.email, data.password)
       .then((response) => {
         const json = response.data;
@@ -51,16 +53,17 @@ export default function LoginContent() {
       })
       .catch((err) => {
         // TODO: Handle error, it just has a key of 'message'
-        // also do it for the signup form
         console.log(err);
-        toast.error("Login failed. Please check your credentials.");
-        const errorData = err.response.data;
-        // for (let key in errorData) {
-        //   const typedKey = key as "email" | "password" | `root.${string}` | "root";
-        //   setError(typedKey, { type: "manual", message: errorData[key][0] });
-        // }
-
+        const errorData = err.message;
+        toast.error(
+          err.message === "Network Error"
+          ? "Network Error. Please check your connection."
+          : "Login failed. Please check your credentials."
+        );
         setError("root", { type: "manual", message: errorData.detail });
+      })
+      .finally(() => {
+        setIsLoading(false); // Stop loading after the process finishes
       });
   };
 
@@ -71,7 +74,11 @@ export default function LoginContent() {
           <Label htmlFor="useremail" className="text-right">
             Email
           </Label>
-          <Input type="email" id="useremail" placeholder="mail@example.com" className="col-span-3"
+          <Input
+            type="email"
+            id="useremail"
+            placeholder="mail@example.com"
+            className="col-span-3"
             {...register("email", { required: true })}
           />
           {errors.email && (
@@ -82,7 +89,12 @@ export default function LoginContent() {
           <Label htmlFor="password" className="text-right">
             Password
           </Label>
-          <Input type="password" id="password" placeholder="••••••••" className="col-span-3" required
+          <Input
+            type="password"
+            id="password"
+            placeholder="••••••••"
+            className="col-span-3"
+            required
             {...register("password", { required: true })}
           />
           {errors.password && (
@@ -90,7 +102,9 @@ export default function LoginContent() {
           )}
         </div>
         <div className="text-end">
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Logging In..." : "Login"} {/* Show loading text */}
+          </Button>
         </div>
         {errors.root && (
           <span className="text-xs text-red-600">{errors.root.message}</span>

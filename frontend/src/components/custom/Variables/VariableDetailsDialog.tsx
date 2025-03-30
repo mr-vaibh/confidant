@@ -21,14 +21,14 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
     const fetchVersions = async () => {
       try {
         const data = await fetcher<Version[]>(`/variables/${variable.id}/versions`);
-        setVersions(data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())); // 🔥 Sort latest first
+        setVersions(data.toSorted((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())); // 🔥 Sort latest first
       } catch (error) {
         console.error('Error fetching versions:', error);
       }
     };
 
     fetchVersions();
-  }, [variable.id]);
+  }, [variable.id, variable.latest_version]);
 
   const handleAddVersion = async () => {
     if (!newValue) {
@@ -99,7 +99,7 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
               <tbody>
                 {versions.map((version) => (
                   <tr key={version.id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 border-b">{String(version.version)}</td>
+                    <td className="px-4 py-2 border-b">{typeof version.version === 'object' ? JSON.stringify(version.version) : String(version.version)}</td>
                     <td className="px-4 py-2 border-b">{version.value}</td>
                     <td className="px-4 py-2 border-b">{new Date(version.created_at).toLocaleDateString()}</td>
                     <td className="px-4 py-2 border-b">

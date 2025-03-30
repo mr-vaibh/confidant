@@ -67,7 +67,7 @@ export const fetcher = async <T>(
       method,
       url,
       headers: { noAuth },
-      data: ["POST", "PUT", "PATCH"].includes(method) ? data : undefined,
+      data: ["GET", "POST", "PUT", "PATCH"].includes(method) ? data : undefined,
     };
 
     const response = await api(config);

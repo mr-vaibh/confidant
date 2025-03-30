@@ -21,11 +21,11 @@ export default function LogoutButton() {
   };
 
   return (
-    <span
+    <button
       onClick={handleLogout}
-      className="text-black cursor-pointer"
+      className="text-black cursor-pointer bg-transparent border-none"
     >
       Logout
-    </span>
+    </button>
   );
 }

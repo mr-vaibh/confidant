@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import VariableDetailsDialog from "@/components/custom/Variables/VariableDetailsDialog";
 import { Variable, Version } from "@/types"; // Ensure proper type imports
 import { fetcher } from "@/app/fetcher";
+import PageHeading from "@/components/custom/PageHeading";
 
 const VariablesPage: React.FC = () => {
     const [variables, setVariables] = useState<Variable[]>([]); // Ensuring variable type safety
@@ -33,18 +34,17 @@ const VariablesPage: React.FC = () => {
     const handleDelete = async (variableId: number, versionId: string): Promise<void> => {
         try {
             await fetcher(`/versions/${versionId}/`, "DELETE");
-    
+
             // Refetch data after deletion
             fetchVariables();
         } catch (error) {
             console.error("Error deleting version:", error);
         }
     };
-    
 
     return (
         <div className="container mx-auto p-8">
-            <h1 className="text-2xl font-bold mb-6">Variables List</h1>
+            <PageHeading text="Variables List" />
 
             {loading && <p>Loading...</p>}
 
@@ -62,6 +62,7 @@ const VariablesPage: React.FC = () => {
                         const latestVersion: Version | undefined = variable.versions.find(
                             (version) => version.id === variable.latest_version
                         );
+                        console.log(variables);
 
                         return (
                             <tr key={variable.id} className="hover:bg-gray-100">
