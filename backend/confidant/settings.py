@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'accounts',
     'vars',
     'keys',
+    'api_usage',
 
     # Libraries
     'corsheaders',
+    'django_extensions',
     'rest_framework',
     # 'rest_framework_simplejwt.token_blacklist',
     'djoser',
@@ -78,6 +80,8 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     # Corsheaders middleware
     'corsheaders.middleware.CorsMiddleware',
+    # API usage tracking middleware
+    'api_usage.middleware.APIUsageTrackingMiddleware',  # Add this line
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -152,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -174,7 +178,7 @@ SITE_NAME = "Confidant"
 # JWT settings (optional, for customizing token behavior)
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

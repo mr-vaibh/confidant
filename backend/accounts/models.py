@@ -1,5 +1,6 @@
 import random
 import string
+import secrets
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
@@ -9,6 +10,11 @@ def generate_random_username(length=4):
     """Generate a random string of letters and digits."""
     characters = string.ascii_lowercase + string.digits
     return ''.join(random.choices(characters, k=length))
+
+def generate_api_key(user):
+    user.api_key = secrets.token_hex(32)
+    user.save()
+    return user.api_key
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -48,6 +54,6 @@ class Profile(models.Model):
     user_obj = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     organization_name = models.CharField(max_length=100, blank=False, null=False)
     public_key = models.TextField(blank=True, null=True)  # 🔥 Added public key field
-
+    
     def __str__(self):
         return f'{self.user_obj.username} Profile'

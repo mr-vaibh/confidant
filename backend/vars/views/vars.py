@@ -59,7 +59,6 @@ def get_sensitive_data(username):
     sensitive_data = {}
     # Filter variables by the user associated with the provided username
     variables = EnvironmentVariable.objects.select_related('latest_version').filter(created_by__username=username)
-    print(variables)
     for var in variables:
         sensitive_data[var.name] = var.latest_version.value if var.latest_version else None
     return sensitive_data
