@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Key } from 'lucide-react';
 import Link from "next/link";
 import { fetcher } from "@/app/fetcher";
-import { useUser } from '@/context/UserContext';
 
 interface ManageSecretsResponse {
     total_variables_count: number;
@@ -22,23 +21,20 @@ interface GenerateKeyResponse {
 export default function ManageSecrets() {
     const [loading, setLoading] = useState(false);
     const [secretsData, setSecretsData] = useState<ManageSecretsResponse | null>(null);
-    const { user } = useUser();
 
     // Fetch the active keys count and last generated days only after user is available
     useEffect(() => {
-        if (user?.username) {
-            const fetchActiveKeysCount = async () => {
-                try {
-                    const data = await fetcher<ManageSecretsResponse>(`/variables/manage-secrets/${user.username}/`);
-                    setSecretsData(data); // Store the response object in a single state
-                } catch (error) {
-                    console.error("Error fetching secrets data:", error);
-                }
-            };
+        const fetchActiveKeysCount = async () => {
+            try {
+                const data = await fetcher<ManageSecretsResponse>("/variables/manage-secrets/");
+                setSecretsData(data); // Store the response object in a single state
+            } catch (error) {
+                console.error("Error fetching secrets data:", error);
+            }
+        };
 
-            fetchActiveKeysCount();
-        }
-    }, [user]); // Only re-run the effect when `user` changes
+        fetchActiveKeysCount();
+    }, []);
 
     const handleDownloadKey = async () => {
         setLoading(true);

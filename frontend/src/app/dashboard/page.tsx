@@ -4,7 +4,6 @@ import useSWR from "swr";
 import { fetcher } from "@/app/fetcher";
 import { useRouter } from "next/navigation";
 import Usage from "@/components/ui/Usage";
-import { UserProvider } from "@/context/UserContext";
 
 // Define the user type
 interface User {
@@ -20,8 +19,6 @@ export default function Dashboard() {
   if (error) return router.push("/login");
 
   return (
-    <UserProvider>
-      <Usage />
-    </UserProvider>
+    <Usage />
   );
 }
