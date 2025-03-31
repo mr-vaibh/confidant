@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     # Libraries
     'corsheaders',
     'django_extensions',
-    "django_celery_beat",
     'rest_framework',
     # 'rest_framework_simplejwt.token_blacklist',
     'djoser',
