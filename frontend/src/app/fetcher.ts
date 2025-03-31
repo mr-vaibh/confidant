@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { AuthActions } from "@/app/auth/utils";
 import publicPaths from "@/publicPaths";
+import toast from 'react-hot-toast';
 
 const { handleJWTRefresh, storeToken, getToken } = AuthActions();
 
@@ -44,7 +45,7 @@ api.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
   }
 );
 
@@ -74,11 +75,13 @@ export const fetcher = async <T>(
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.response?.data || error.message);
+      const errorFromBackend = error.response ? error.response?.data?.error : "Network Error";
+      toast.error(errorFromBackend);
+      console.error("Axios error:", error);
       throw new Error(error.response?.data?.message || "An error occurred while fetching data.");
     } else {
-      console.error("Unexpected error:", error);
-      throw new Error("An unexpected error occurred.");
+      console.error("Unexpected error [other than AXIOS]:", error);
+      throw new Error("An unexpected error occurred [other than AXIOS]");
     }
   }
 };

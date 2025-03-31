@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # Libraries
     'corsheaders',
     'django_extensions',
+    "django_celery_beat",
     'rest_framework',
     # 'rest_framework_simplejwt.token_blacklist',
     'djoser',
@@ -217,3 +218,9 @@ DJOSER = {
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Celery settings for billing usage
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # Redis as broker
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"

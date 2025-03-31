@@ -1,59 +1,44 @@
-import React, { useEffect, useState, ReactNode } from 'react';
+// components/VersionListDialog.tsx
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Variable, Version } from '@/types';
+import useVersions from '@/hooks/useVersions';
 import { fetcher } from '@/app/fetcher';
 
-interface VariableDetailsDialogProps {
+interface VersionListDialogProps {
   variable: Variable;
-  children: ReactNode;
-  refreshVariables: () => void;  // ✅ Accept refresh function
+  children: React.ReactNode;
+  refreshVariables: () => void;
 }
 
-const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable, children, refreshVariables }) => {
-  const [versions, setVersions] = useState<Version[]>([]);
-  const [loading, setLoading] = useState(false);
+const VersionListDialog: React.FC<VersionListDialogProps> = ({ variable, children, refreshVariables }) => {
+  const { versions, loading, setVersions } = useVersions(variable.id); // Use custom hook
   const [newVersion, setNewVersion] = useState('');
   const [newValue, setNewValue] = useState('');
-
-  useEffect(() => {
-    const fetchVersions = async () => {
-      try {
-        const data = await fetcher<Version[]>(`/variables/${variable.id}/versions`);
-        setVersions(data.toSorted((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())); // 🔥 Sort latest first
-      } catch (error) {
-        console.error('Error fetching versions:', error);
-      }
-    };
-
-    fetchVersions();
-  }, [variable.id, variable.latest_version]);
+  const [loadingVersions, setLoadingVersions] = useState<Set<number>>(new Set()); // Track loading state per version
 
   const handleAddVersion = async () => {
-    if (!newValue) {
-      alert('Please enter both some value.');
+    if (!newValue || !newVersion) {
+      alert('Please enter both version and value.');
       return;
     }
-  
+
     try {
-      setLoading(true);
-      const newEntry: Version = await fetcher<Version>(`/versions/`, 'POST', {
+      const newEntry: Version = await fetcher<Version>('/versions/', 'POST', {
         version: newVersion,
         value: newValue,
         created_by: variable.created_by,
-        variable_id: variable.id, 
+        variable_id: variable.id,
       });
 
-      setVersions((prev) => [newEntry, ...prev]); // ✅ Add new version at the top
+      setVersions((prev) => [newEntry, ...prev]); // Add new version at the top
       setNewVersion('');
       setNewValue('');
-
-      refreshVariables();  // ✅ Update the Variables List table
+      refreshVariables();  // Update the Variables List table
     } catch (error) {
       console.error('Error adding version:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -61,13 +46,17 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
     if (!window.confirm('Are you sure you want to delete this version?')) return;
 
     try {
-      setLoading(true);
+      setLoadingVersions((prev) => new Set(prev).add(versionId)); // Mark this version as loading
       await fetcher(`/versions/${versionId}/`, 'DELETE');
       setVersions((prev) => prev.filter((version) => version.id !== versionId));
     } catch (error) {
       console.error('Error deleting version:', error);
     } finally {
-      setLoading(false);
+      setLoadingVersions((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(versionId); // Remove the loading state for this version
+        return newSet;
+      });
     }
   };
 
@@ -106,10 +95,10 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
                       <Button
                         variant="destructive"
                         size="sm"
-                        disabled={loading}
+                        disabled={loadingVersions.has(version.id)} // Disable if this version is loading
                         onClick={() => handleDelete(version.id)}
                       >
-                        {loading ? 'Deleting...' : 'Delete'}
+                        {loadingVersions.has(version.id) ? 'Deleting...' : 'Delete'}
                       </Button>
                     </td>
                   </tr>
@@ -147,4 +136,4 @@ const VariableDetailsDialog: React.FC<VariableDetailsDialogProps> = ({ variable,
   );
 };
 
-export default VariableDetailsDialog;
+export default VersionListDialog;
