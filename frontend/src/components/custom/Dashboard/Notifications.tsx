@@ -11,11 +11,11 @@ const data = [
     { name: 'Jun', value: 700 },
 ]
 
-export default function Announcements() {
+export default function Notifications() {
     return (
         <Card className="shadow-md">
         <CardHeader>
-          <CardTitle>Announcements</CardTitle>
+          <CardTitle>Notifications</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

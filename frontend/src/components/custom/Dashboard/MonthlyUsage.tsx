@@ -33,14 +33,14 @@ const formatMonthYear = (dateString: string) => {
 };
 
 export default function MonthlyUsage() {
-  const [data, setData] = useState<{ name: string; value: number }[]>([]);
+  const [data, setData] = useState<{ month: string; net_usage: number }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetcher<{ monthly_usage_report: { name: string; value: number }[] }>("/monthly-usage/");
+        const response = await fetcher<{ monthly_usage_report: { month: string; net_usage: number }[] }>("/monthly-usage/");
         setData(response.monthly_usage_report);
       } catch (err: any) {
         setError(err.message || "Failed to load data.");
@@ -68,14 +68,14 @@ export default function MonthlyUsage() {
   let usageIcon = null;
 
   if (totalMonths >= 2) {
-    const latestValue = data[totalMonths - 1].value;
-    const prevValue = data[totalMonths - 2].value;
+    const latestValue = data[totalMonths - 1].net_usage;
+    const prevValue = data[totalMonths - 2].net_usage;
 
     if (prevValue !== 0) {
       const changePercent = ((latestValue - prevValue) / prevValue) * 100;
       const isIncrease = changePercent > 0;
 
-      usageText = `${isIncrease ? "Usage up" : "Usage down"} by ${Math.abs(changePercent.toFixed(2))}% last month`;
+      usageText = `${isIncrease ? "Usage up" : "Usage down"} by ${Math.abs(Number(changePercent.toFixed(2)))}% last month`;
       usageIcon = isIncrease ? <TrendingUp className="h-4 w-4 text-green-500" /> : <TrendingDown className="h-4 w-4 text-red-500" />;
     }
   }
@@ -102,7 +102,7 @@ export default function MonthlyUsage() {
                 <AreaChart data={data} margin={{ left: 12, right: 12 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis
-                    dataKey="name"
+                    dataKey="month"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
@@ -112,7 +112,7 @@ export default function MonthlyUsage() {
                   <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                   <Area
                     type="monotone"
-                    dataKey="value"
+                    dataKey="net_usage"
                     stroke="var(--color-apiUsage)"
                     fill="var(--color-apiUsage)"
                     fillOpacity={0.4}

@@ -31,8 +31,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [user, error]);
 
+  const contextValue = React.useMemo(() => ({ user: userState, setUser: setUserState }), [userState]);
+
   return (
-    <UserContext.Provider value={{ user: userState, setUser: setUserState }}>
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );

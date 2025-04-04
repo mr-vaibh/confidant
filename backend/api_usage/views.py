@@ -34,8 +34,32 @@ class APIUsageMonthlyReportView(APIView):
         }
 
         usage_data = [
-            {"name": f"{month_names[item['month']]} {str(item['year'])}", "value": item["total_requests"]}
+            {"month": f"{month_names[item['month']]} {str(item['year'])}", "net_usage": item["total_requests"]}
             for item in usage_query
         ]
 
+
         return Response({"monthly_usage_report": usage_data})
+
+class UserBillingInfoView(APIView):
+    """Returns the current user's billing details (plan, next billing date, and price)."""
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        
+        try:
+            user_billing = UserBilling.objects.select_related("plan").get(user=user)
+            plan_name = user_billing.plan.name if user_billing.plan else "No Plan"
+            plan_price = user_billing.plan.price if user_billing.plan else 0.00
+            next_billing_date = user_billing.next_billing_date.strftime("%Y-%m-%d") if user_billing.next_billing_date else "N/A"
+
+            return Response({
+                "current_plan": plan_name,
+                "plan_price": float(plan_price),  # Convert to float for JSON compatibility
+                "next_billing_date": next_billing_date
+            })
+        
+        except UserBilling.DoesNotExist:
+            return Response({"error": "User billing info not found."}, status=404)
