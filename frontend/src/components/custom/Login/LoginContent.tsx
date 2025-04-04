@@ -49,7 +49,7 @@ export default function LoginContent() {
         storeToken(json.access, "access");
         storeToken(json.refresh, "refresh");
 
-        router.push("dashboard");
+        router.push("/dashboard");
       })
       .catch((err) => {
         // TODO: Handle error, it just has a key of 'message'
