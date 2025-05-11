@@ -13,8 +13,8 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
 
     path('account/activate/<uidb64>/<token>/', ActivationView.as_view(), name='account-activate'),
-    path('account/notifications/<str:username>/', notifications, name='notifications'),
     path('account/notifications/mark-as-read/', mark_as_read, name='mark-as-done'),  # New URL
+    path('account/notifications/<str:username>/', notifications, name='notifications'),
 
     path('account/', include(router.urls)),
 ]
