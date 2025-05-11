@@ -4,6 +4,7 @@
 
 import { AuthActions } from "@/app/auth/utils";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -21,11 +22,12 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      className="w-full justify-start font-normal"
       onClick={handleLogout}
-      className="text-black cursor-pointer bg-transparent border-none"
     >
       Logout
-    </button>
+    </Button>
   );
 }

@@ -8,8 +8,17 @@ interface ToggleLinkProps {
 
 const ToggleLink: React.FC<ToggleLinkProps> = ({ isOpen, handleToggle }) => {
   return (
-    <Button className="nav:hidden ml-auto" variant="link" onClick={handleToggle}>
-      {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="md:hidden"
+      onClick={handleToggle}
+    >
+      {isOpen ? (
+        <X className="h-5 w-5" />
+      ) : (
+        <Menu className="h-5 w-5" />
+      )}
       <span className="sr-only">Toggle menu</span>
     </Button>
   );

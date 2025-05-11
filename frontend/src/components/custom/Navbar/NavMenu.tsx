@@ -97,40 +97,6 @@ function NavMenu() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
-        {user
-          ?
-          <NavigationMenuItem className="relative">
-            <NavigationMenuTrigger><CircleUserRound /></NavigationMenuTrigger>
-            <NavigationMenuContent className="absolute right-0 top-full w-[200px]">
-              <ul className="grid gap-3 p-4 bg-background shadow-md rounded-md w-[200px]">
-                <ListItem
-                  key={1}
-                  title={user?.username.toUpperCase()}
-                  href="/profile"
-                >
-                  {user?.email}
-                </ListItem>
-                <ListItem>
-                  <LogoutButton />
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          :
-          <>
-            <Link href="/login">
-              <Button className="md:mr-2 mt-4 md:mt-0" variant="link">
-                Log in
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="md:mr-2 mt-4 md:mt-0">
-                Signup
-              </Button>
-            </Link>
-          </>
-        }
       </NavigationMenuList>
     </NavigationMenu>
   );

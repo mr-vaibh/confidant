@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import ToggleLink from "./ToggleLink";
 import NavMenu from "./NavMenu";
+import UserMenu from "./UserMenu";
 import { UserProvider } from "@/context/UserContext";
 
 const Navbar: React.FC = () => {
@@ -24,11 +25,16 @@ const Navbar: React.FC = () => {
       <div
         className={`nav:flex flex-col nav:flex-row items-center w-full nav:w-auto ${
           isOpen ? "block" : "hidden"
-          }`}
+        }`}
       >
-        <div className="flex flex-col nav:flex-row items-center w-full nav:w-auto">
+        <div className="flex flex-col nav:flex-row items-center justify-between w-full nav:w-auto gap-4">
           <UserProvider>
-            <NavMenu />
+            <div className="flex-1 flex justify-center">
+              <NavMenu />
+            </div>
+            <div className="flex justify-end">
+              <UserMenu />
+            </div>
           </UserProvider>
         </div>
       </div>
