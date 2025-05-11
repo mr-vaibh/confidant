@@ -5,6 +5,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+
+CATEGORY_CHOICES = [
+    ('success', 'Success'),
+    ('info', 'Information'),
+    ('warning', 'Warning'),
+    ('alert', 'Alert'),
+]
 
 def generate_random_username(length=4):
     """Generate a random string of letters and digits."""
@@ -57,3 +65,47 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'{self.user_obj.username} Profile'
+    
+    def push_notification(self, message, description='', url=None):
+        """Method to create a new notification for this profile."""
+        notification = Notification(
+            profile=self,
+            message=message,
+            description=description,
+            url=url
+        )
+        notification.save()
+
+class Notification(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='notifications')
+    message = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='info')
+    url = models.URLField(blank=True, default='')
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    read_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Notification'
+    
+    def mark_as_read(self):
+        self.is_read = True
+        self.read_at = timezone.now()
+        self.save()
+
+    def mark_as_unread(self):
+        self.is_read = False
+        self.read_at = None
+        self.save()
+    
+    def mark_all_as_read(self, user):
+        notifications = Notification.objects.filter(profile__user_obj=user, is_read=False)
+        notifications.update(is_read=True)
+    
+    def unread_count(self, user):
+        return Notification.objects.filter(profile__user_obj=user, is_read=False).count()
+
+    def __str__(self):
+        return f"Notification for {self.profile.user_obj.username}: {self.message}"

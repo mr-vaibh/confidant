@@ -19,13 +19,17 @@ class APIUsageMonthlyReportView(APIView):
     def get(self, request):
         user = request.user
 
-        # If admin, fetch all users' usage data, else only fetch the current user's data
-        usage_query = APIUsageLog.objects.values("api_name", "month", "year").annotate(
+        # Start with base queryset
+        base_query = APIUsageLog.objects
+        
+        # Filter by user first if not staff
+        if not user.is_staff:
+            base_query = base_query.filter(user=user)
+
+        # Then perform aggregation on filtered queryset
+        usage_query = base_query.values("api_name", "month", "year").annotate(
             total_requests=Sum("request_count")
         ).order_by("year", "month")
-
-        if not user.is_staff:  # Regular user
-            usage_query = usage_query.filter(user=user)
 
         # Convert months into readable format for frontend
         month_names = {
@@ -37,7 +41,6 @@ class APIUsageMonthlyReportView(APIView):
             {"month": f"{month_names[item['month']]} {str(item['year'])}", "net_usage": item["total_requests"]}
             for item in usage_query
         ]
-
 
         return Response({"monthly_usage_report": usage_data})
 

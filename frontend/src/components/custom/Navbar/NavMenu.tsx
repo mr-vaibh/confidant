@@ -100,10 +100,10 @@ function NavMenu() {
         <Input placeholder="Search..." className="md:mr-4 mt-4 md:mt-0" />
         {user
           ?
-          <NavigationMenuItem>
+          <NavigationMenuItem className="relative">
             <NavigationMenuTrigger><CircleUserRound /></NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[200px] gap-3 p-4 ">
+            <NavigationMenuContent className="absolute right-0 top-full w-[200px]">
+              <ul className="grid gap-3 p-4 bg-background shadow-md rounded-md w-[200px]">
                 <ListItem
                   key={1}
                   title={user?.username.toUpperCase()}

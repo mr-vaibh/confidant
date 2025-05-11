@@ -3,7 +3,7 @@ from .models import Profile
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Profile
+from .models import User, Profile, Notification
 
 class UserAdmin(BaseUserAdmin):
     model = User
@@ -40,3 +40,9 @@ class ProfileAdmin(admin.ModelAdmin):
         return False  # Disable the delete action for Profile
 
 admin.site.register(Profile, ProfileAdmin)
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'message', 'is_read', 'created_at')
+    search_fields = ('profile__user_obj__email', 'message')
+    list_filter = ('profile', 'is_read')
+admin.site.register(Notification, NotificationAdmin)

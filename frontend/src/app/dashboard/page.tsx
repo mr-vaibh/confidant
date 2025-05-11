@@ -34,13 +34,17 @@ export default function Dashboard() {
   return (
     <div className="w-full px-4 md:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* First Row */}
-        <MonthlyUsage />
-        <Notifications />
+        {user &&
+          <>
+            {/* First Row */}
+            <MonthlyUsage />
+            <Notifications username={user.username} />
 
-        {/* Second Row */}
-        <BillingOverview />
-        <ManageSecrets />
+            {/* Second Row */}
+            <BillingOverview />
+            <ManageSecrets />
+          </>
+        }
       </div>
     </div>
   );

@@ -54,12 +54,18 @@ class UserBilling(models.Model):
             # TODO: Implement actual payment processing logic
             # process_payment(self.user)
 
+            today = now().date()
             # Set last billed month to today
-            self.last_billed_month = now().date()
+            self.last_billed_month = today
 
-            # Update next billing date to next month
-            self.next_billing_date = now().date().replace(day=1) + timedelta(days=32)
-            self.next_billing_date = self.next_billing_date.replace(day=1)
+            # Get first day of current month
+            first_of_month = today.replace(day=1)
+            # Add one month to get first day of next month
+            if first_of_month.month == 12:
+                # Handle December specially
+                self.next_billing_date = first_of_month.replace(year=first_of_month.year + 1, month=1)
+            else:
+                self.next_billing_date = first_of_month.replace(month=first_of_month.month + 1)
 
             # Reset API & secret usage
             self.reset_usage()
@@ -87,7 +93,6 @@ class UserBilling(models.Model):
         """Increment API call count and check limits."""
         if self.has_exceeded_limit():
             raise ValueError("API limit exceeded")
-        self.api_calls_used += 1
         self.save()
 
     def can_change_plan(self):

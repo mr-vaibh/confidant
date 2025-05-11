@@ -84,12 +84,12 @@ class EncryptEnvironmentVariablesView(APIView):
 
             user = User.objects.filter(username=username).first()
             if not user:
-                return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "User not found"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Retrieve the public key from UserPublicKey model
             user_key_entry = UserPublicKey.objects.filter(user=user).first()
             if not user_key_entry or not user_key_entry.public_key:
-                return Response({"error": "Public key not found for user"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Public key not found for user"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Load the public key
             public_key = serialization.load_pem_public_key(user_key_entry.public_key.encode("utf-8"))
