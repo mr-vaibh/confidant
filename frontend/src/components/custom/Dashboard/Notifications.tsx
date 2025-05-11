@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell } from 'lucide-react';
+import { Bell, CheckCircle2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { fetcher } from "@/app/fetcher";  // Import fetcher function
+import { fetcher } from "@/app/fetcher";
+import { cn } from "@/lib/utils";
 
 // Type definition for the notification
 interface Notification {
@@ -59,12 +60,12 @@ export default function Notifications({ username }: NotificationsProps) {
   };
 
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-md flex flex-col">
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {(() => {
             if (loading) {
               return <div>Loading...</div>;
@@ -75,17 +76,40 @@ export default function Notifications({ username }: NotificationsProps) {
             return notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`flex items-center space-x-4 ${notification.is_read ? "bg-gray-100" : ""}`}
+                className={cn(
+                  "group relative flex items-start gap-3 p-3 transition-colors hover:bg-muted/50",
+                  notification.is_read ? "bg-muted/30" : "bg-background"
+                )}
               >
-                <Bell className="h-6 w-6 text-blue-500" />
-                <div>
-                  <h3 className="font-semibold">{notification.message}</h3>
-                  <p className="text-sm text-gray-500">{notification.description}</p>
+                <div className="mt-1">
+                  {notification.is_read ? (
+                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <div className="relative">
+                      <Bell className="h-4 w-4 text-primary" />
+                      <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 space-y-0.5">
+                  <h3 className={cn(
+                    "font-medium leading-tight",
+                    notification.is_read ? "text-muted-foreground" : "text-foreground"
+                  )}>
+                    {notification.message}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {notification.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground/70">
+                    {new Date(notification.created_at).toLocaleDateString()}
+                  </p>
                 </div>
                 {!notification.is_read && (
                   <Button
                     size="sm"
-                    variant="outline"
+                    variant="ghost"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => markAsRead(notification.id)}
                   >
                     Mark as Read
@@ -98,8 +122,10 @@ export default function Notifications({ username }: NotificationsProps) {
       </CardContent>
 
       {notifications.length > 0 && (
-        <CardFooter>
-          <Button variant="outline">View All</Button>
+        <CardFooter className="mt-auto">
+          <Button variant="outline" className="w-full">
+            View All
+          </Button>
         </CardFooter>
       )}
     </Card>
