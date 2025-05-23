@@ -8,6 +8,8 @@ import { CreditCard } from "lucide-react";
 import { fetcher } from "@/app/fetcher";
 import toast from "react-hot-toast";
 
+import { DashboardSkeleton } from "@/components/custom/Skeletons/Dashboard.skeleton";
+
 interface BillingInfo {
     current_plan: string;
     plan_price: number;
@@ -24,6 +26,7 @@ export default function MonthlyPerformance() {
                 const data = await fetcher<BillingInfo>("/billing-overview/");
                 setBillingData(data);
             } catch (error) {
+                console.error("Error fetching billing details:", error);
                 toast.error("Failed to fetch billing details.");
             } finally {
                 setLoading(false);
@@ -31,6 +34,8 @@ export default function MonthlyPerformance() {
         }
         getBillingInfo();
     }, []);
+
+    if (loading) return <DashboardSkeleton />
 
     return (
         <Card className="shadow-md">

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { fetcher } from "@/app/fetcher";
 import { cn } from "@/lib/utils";
 
+import { DashboardSkeleton } from "@/components/custom/Skeletons/Dashboard.skeleton";
+
 // Type definition for the notification
 interface Notification {
   id: number;
@@ -58,6 +60,8 @@ export default function Notifications({ username }: NotificationsProps) {
       console.error("Error marking notification as read:", error);
     }
   };
+
+  if (loading) return <DashboardSkeleton />
 
   return (
     <Card className="shadow-md flex flex-col">

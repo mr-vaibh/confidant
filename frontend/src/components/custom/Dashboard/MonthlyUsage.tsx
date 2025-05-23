@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/chart";
 import { fetcher } from "@/app/fetcher";
 
+import { DashboardSkeleton } from "@/components/custom/Skeletons/Dashboard.skeleton";
+
 // Utility to format month + year from raw date
 const formatMonthYear = (dateString: string) => {
   const date = new Date(dateString);
@@ -43,7 +45,7 @@ export default function MonthlyUsage() {
         const response = await fetcher<{ monthly_usage_report: { month: string; net_usage: number }[] }>("/monthly-usage/");
         setData(response.monthly_usage_report);
       } catch (err: any) {
-        setError(err.message || "Failed to load data.");
+        setError(err.message ?? "Failed to load data.");
       } finally {
         setLoading(false);
       }
@@ -80,8 +82,10 @@ export default function MonthlyUsage() {
     }
   }
 
+  if (loading) return <DashboardSkeleton />
+
   return (
-    <Card className="w-full max-h-[45vh] flex flex-col justify-between">
+    <Card className="w-full max-h-[45vh] shadow-md flex flex-col justify-between">
       <CardHeader className="flex-shrink-0">
         <CardTitle>Monthly API Usage</CardTitle>
         <CardDescription>

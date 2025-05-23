@@ -6,6 +6,8 @@ import { Key } from 'lucide-react';
 import Link from "next/link";
 import { fetcher } from "@/app/fetcher";
 
+import { DashboardSkeleton } from "@/components/custom/Skeletons/Dashboard.skeleton";
+
 interface ManageSecretsResponse {
     total_variables_count: number;
     last_generated_days: number;
@@ -19,7 +21,7 @@ interface GenerateKeyResponse {
 }
 
 export default function ManageSecrets() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [secretsData, setSecretsData] = useState<ManageSecretsResponse | null>(null);
 
     // Fetch the active keys count and last generated days only after user is available
@@ -30,6 +32,8 @@ export default function ManageSecrets() {
                 setSecretsData(data); // Store the response object in a single state
             } catch (error) {
                 console.error("Error fetching secrets data:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -70,6 +74,8 @@ export default function ManageSecrets() {
             setLoading(false);
         }
     };
+
+    if (loading) return <DashboardSkeleton />
 
     return (
         <Card className="shadow-md">
