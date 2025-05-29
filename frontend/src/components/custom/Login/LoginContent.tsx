@@ -12,6 +12,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 import SpinningLoader from "../SpinningLoader";
+import { useUser } from '@/context/UserContext';
+import { fetcher } from "@/app/fetcher";
+import type { User } from '@/context/UserContext';
+import useSWR, { mutate } from 'swr';
 
 type FormData = {
   email: string;
@@ -21,6 +25,7 @@ type FormData = {
 export default function LoginContent() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Added loading state
+  const { setUser } = useUser();
 
   const {
     register,
@@ -42,14 +47,22 @@ export default function LoginContent() {
   }
 
   const onSubmit = (data: FormData) => {
-    setIsLoading(true); // Start loading when submit is clicked
+    setIsLoading(true);
     login(data.email, data.password)
       .then((response) => {
         const json = response.data;
-        storeToken(json.access, "access");
-        storeToken(json.refresh, "refresh");
-
-        router.push("/dashboard");
+        Promise.all([
+          storeToken(json.access, "access"),
+          storeToken(json.refresh, "refresh")
+        ]).then(() => {
+          // Fetch user data after successful login
+          return fetcher('/auth/users/me', 'GET')
+            .then(userData => {
+              console.log("User data fetched successfully:", userData);
+              setUser(userData as User);
+              router.push("/dashboard");
+            });
+        });
       })
       .catch((err) => {
         // TODO: Handle error, it just has a key of 'message'
@@ -57,8 +70,8 @@ export default function LoginContent() {
         const errorData = err.message;
         toast.error(
           err.message === "Network Error"
-          ? "Network Error. Please check your connection."
-          : "Login failed. Please check your credentials."
+            ? "Network Error. Please check your connection."
+            : "Login failed. Please check your credentials."
         );
         setError("root", { type: "manual", message: errorData.detail });
       })

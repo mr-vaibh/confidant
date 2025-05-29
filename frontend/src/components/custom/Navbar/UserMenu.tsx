@@ -13,6 +13,7 @@ import { useUser } from '@/context/UserContext';
 
 const UserMenu = () => {
   const { user } = useUser();
+  console.log("UserMenu user:", user);
 
   return (
     <div className="flex items-center gap-4">

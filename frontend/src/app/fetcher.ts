@@ -21,7 +21,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error instanceof Error ? error : new Error(String(error)))
 );
 
 // Response interceptor to handle 401 errors
@@ -31,17 +31,18 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401) {
+      const isPublicPath = publicPaths.includes(window.location.pathname);
       try {
         const { access } = (await handleJWTRefresh()).data as { access: string };
         storeToken(access, "access");
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return api(originalRequest);
       } catch (err) {
-        const isPublicPath = publicPaths.includes(window.location.pathname);
         if (!isPublicPath) {
           window.location.replace("/login");
         }
-        return Promise.reject(new Error("Unauthorized"));
+        // Rethrow the original error to avoid swallowing exceptions
+        throw err;
       }
     }
 
