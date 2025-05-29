@@ -14,17 +14,24 @@ import {
 
 import components from "./LinkData";
 
+import { useUser } from '@/hooks/useUser';
+
 function NavMenu() {
+  const { isLoggedIn } = useUser();
+
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex flex-wrap nav:flex-nowrap">
-        <NavigationMenuItem>
-          <Link href="/dashboard" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Dashboard
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+        {isLoggedIn && (
+          <NavigationMenuItem>
+            <Link href="/dashboard" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Dashboard
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          )
+        }
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
           <NavigationMenuContent>
