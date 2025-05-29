@@ -1,6 +1,4 @@
-// context/UserContext.tsx
-
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '@/app/fetcher';
 import publicPaths from "@/publicPaths";
@@ -13,38 +11,24 @@ export interface User {
 
 interface UserContextType {
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  mutateUser: () => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [userState, setUserState] = useState<User | null>(null);
+  const isPublicPath =
+    typeof window !== "undefined" && publicPaths.includes(window.location.pathname);
 
-  // Determine if the current path is a public path
-  const isPublicPath = typeof window !== "undefined" && publicPaths.includes(window.location.pathname);
-
-  // Use SWR only if it's NOT a public path
-  const { data: user, error } = useSWR<User>(
+  const { data: user, error, mutate } = useSWR<User>(
     !isPublicPath ? '/auth/users/me' : null,
     fetcher
   );
 
-  useEffect(() => {
-    if (isPublicPath) {
-      setUserState(null); // or {} if you prefer empty object
-    } else if (error) {
-      console.error("Error fetching user data:", error);
-      setUserState(null);
-    } else if (user !== undefined) {
-      setUserState(user);
-    }
-  }, [user, error, isPublicPath]);
-
-  const contextValue = React.useMemo(
-    () => ({ user: userState, setUser: setUserState }),
-    [userState]
-  );
+  const contextValue: UserContextType = {
+    user: user || null,
+    mutateUser: () => mutate(),
+  };
 
   return (
     <UserContext.Provider value={contextValue}>

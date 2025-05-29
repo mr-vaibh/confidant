@@ -2,8 +2,6 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,14 +13,8 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import components from "./LinkData";
-import LogoutButton from "@/components/custom/Dashboard/LogoutButton";
-
-import { useUser } from '@/context/UserContext';
-import { CircleUserRound } from "lucide-react";
 
 function NavMenu() {
-  const { user, setUser } = useUser();
-
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex flex-wrap nav:flex-nowrap">

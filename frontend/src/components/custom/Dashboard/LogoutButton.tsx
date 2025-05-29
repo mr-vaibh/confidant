@@ -1,10 +1,7 @@
-// components/LogoutButton.js (or .tsx)
-
-"use client";
-
 import { AuthActions } from "@/app/auth/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { mutate } from "swr";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -12,12 +9,13 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logout(); // optional API logout call
     } catch (error) {
       console.error(error);
     } finally {
-      removeTokens();
-      router.push("/login");
+      removeTokens();              // clear tokens locally
+      await mutate("/auth/users/me", null, false); // clear SWR user cache immediately
+      router.push("/login");       // redirect to login page
     }
   };
 

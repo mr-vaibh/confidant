@@ -9,7 +9,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import LogoutButton from "@/components/custom/Dashboard/LogoutButton";
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/hooks/useUser';
 
 const UserMenu = () => {
   const { user } = useUser();

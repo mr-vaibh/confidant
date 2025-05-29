@@ -12,10 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 import SpinningLoader from "../SpinningLoader";
-import { useUser } from '@/context/UserContext';
-import { fetcher } from "@/app/fetcher";
-import type { User } from '@/context/UserContext';
-import useSWR, { mutate } from 'swr';
+import { useUser } from '@/hooks/useUser'; // <-- import your new hook
 
 type FormData = {
   email: string;
@@ -24,8 +21,8 @@ type FormData = {
 
 export default function LoginContent() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Added loading state
-  const { setUser } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const { mutateUser } = useUser();  // <-- destructure mutateUser from hook
 
   const {
     register,
@@ -35,7 +32,6 @@ export default function LoginContent() {
   } = useForm<FormData>();
 
   const router = useRouter();
-
   const { login, storeToken } = AuthActions();
 
   useEffect(() => {
@@ -48,35 +44,32 @@ export default function LoginContent() {
 
   const onSubmit = (data: FormData) => {
     setIsLoading(true);
+
     login(data.email, data.password)
-      .then((response) => {
+      .then(async (response) => {
         const json = response.data;
-        Promise.all([
+
+        await Promise.all([
           storeToken(json.access, "access"),
-          storeToken(json.refresh, "refresh")
-        ]).then(() => {
-          // Fetch user data after successful login
-          return fetcher('/auth/users/me', 'GET')
-            .then(userData => {
-              console.log("User data fetched successfully:", userData);
-              setUser(userData as User);
-              router.push("/dashboard");
-            });
-        });
+          storeToken(json.refresh, "refresh"),
+        ]);
+
+        // Revalidate user data via SWR mutate
+        await mutateUser();
+
+        router.push("/dashboard");
       })
       .catch((err) => {
-        // TODO: Handle error, it just has a key of 'message'
-        console.log(err);
-        const errorData = err.message;
+        console.error(err);
         toast.error(
           err.message === "Network Error"
             ? "Network Error. Please check your connection."
             : "Login failed. Please check your credentials."
         );
-        setError("root", { type: "manual", message: errorData.detail });
+        setError("root", { type: "manual", message: err.message ?? "Login failed" });
       })
       .finally(() => {
-        setIsLoading(false); // Stop loading after the process finishes
+        setIsLoading(false);
       });
   };
 
@@ -98,6 +91,7 @@ export default function LoginContent() {
             <span className="text-xs text-red-600">Email is required</span>
           )}
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="password" className="text-right">
             Password
@@ -107,22 +101,24 @@ export default function LoginContent() {
             id="password"
             placeholder="••••••••"
             className="col-span-3"
-            required
             {...register("password", { required: true })}
           />
           {errors.password && (
             <span className="text-xs text-red-600">Password is required</span>
           )}
         </div>
+
         <div className="text-end">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Logging In..." : "Login"} {/* Show loading text */}
+            {isLoading ? "Logging In..." : "Login"}
           </Button>
         </div>
+
         {errors.root && (
           <span className="text-xs text-red-600">{errors.root.message}</span>
         )}
       </form>
+
       <div className="text-center">
         <Link
           href="/auth/password/reset-password"

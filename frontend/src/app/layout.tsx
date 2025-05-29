@@ -5,8 +5,6 @@ import "./globals.css";
 
 import { Toaster } from "react-hot-toast";
 
-import { Providers } from "./providers";
-
 import Navbar from "@/components/custom/Navbar/Navbar";
 import Footer from "@/components/custom/Home/Footer";
 
@@ -28,21 +26,18 @@ export default function RootLayout({
 }>) {
   return (
     <React.StrictMode>
-      <Providers>
-        {/* Providers component wraps the children with UserProvider */}
-        <html lang="en">
-          <body className={inter.className}>
-            <Toaster position="top-right" />
-            <main className="flex flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
-              <Navbar />
-              {children}
-              {login}
-              {signup}
-              <Footer />
-            </main>
-          </body>
-        </html>
-      </Providers>
+      <html lang="en">
+        <body className={inter.className}>
+          <Toaster position="top-right" />
+          <main className="flex flex-col items-center justify-between p-2 sm:p-6 bg-smoky_black-300">
+            <Navbar />
+            {children}
+            {login}
+            {signup}
+            <Footer />
+          </main>
+        </body>
+      </html>
     </React.StrictMode>
   );
 }
