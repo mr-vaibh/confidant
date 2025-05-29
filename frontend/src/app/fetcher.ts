@@ -77,6 +77,13 @@ export const fetcher = async <T>(
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorFromBackend = error.response ? error.response?.data?.error : "Network Error";
+
+      const isAuthRelatedError = error.request.responseURL.includes("/auth/jwt/refresh");
+
+      if (!isAuthRelatedError) {
+        toast.error(errorFromBackend);
+      }
+
       console.log("=========== Fetcher ===========");
       console.log("Backend error:", errorFromBackend);
       console.log("Axios error:", error);
