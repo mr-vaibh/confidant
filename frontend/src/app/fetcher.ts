@@ -77,9 +77,11 @@ export const fetcher = async <T>(
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorFromBackend = error.response ? error.response?.data?.error : "Network Error";
-      toast.error(errorFromBackend);
-      console.error("Axios error:", error);
-      throw new Error(error.response?.data?.message || "An error occurred while fetching data.");
+      console.log("=========== Fetcher ===========");
+      console.log("Backend error:", errorFromBackend);
+      console.log("Axios error:", error);
+      console.log("===============================\n");
+      throw new Error(error.response?.data?.message ?? "An error occurred while fetching data.");
     } else {
       console.error("Unexpected error [other than AXIOS]:", error);
       throw new Error("An unexpected error occurred [other than AXIOS]");
