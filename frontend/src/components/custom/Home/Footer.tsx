@@ -22,7 +22,7 @@ export default function Footer() {
               </span>
             </h1>
             <div className="mt-2">
-            <Link  href="https://x.com/compose/tweet?text=I've been using Confidant. My thoughts are...">
+            <Link  href="https://x.com/compose/tweet?text=I've been using Confidant. My thoughts are..." target="_blank" rel="noopener noreferrer">
               <Button variant='secondary'>
                 Share Your Thoughts On
                 <Icons.twitter className="icon-class ml-1 w-3.5 " />

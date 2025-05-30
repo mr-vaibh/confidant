@@ -21,14 +21,17 @@ const ResetPassword = () => {
             await resetPassword(data.email);
             toast.success("Password reset email sent. Please check your inbox.");
         } catch (err) {
-            toast.error("Failed to send password reset email. Please try again.");
+            console.error("Reset password error:", err);
+            toast.error(
+                "Failed to send password reset email. Please try again."
+            );
         } finally {
             setLoading(false); // Reset loading state when the process is complete
         }
     };
 
     return (
-        <div className="flex items-start justify-center min-h-screen bg-background dark:bg-background-dark">
+        <div className="flex items-start justify-center min-h-[45vh] bg-background dark:bg-background-dark">
             <div className="w-full max-w-md p-8 bg-white dark:bg-black rounded-lg shadow-lg">
                 <h3 className="text-2xl font-semibold text-primary dark:text-primary-dark">
                     Reset Password

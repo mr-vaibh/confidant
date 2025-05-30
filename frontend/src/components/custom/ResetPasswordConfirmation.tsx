@@ -63,6 +63,7 @@ const ResetPasswordConfirmation = () => {
             toast.success("Password has been reset successfully.");
             router.push("/");
         } catch (err) {
+            console.error("Reset password error:", err);
             toast.error("Failed to reset password. Please try again.");
         } finally {
             setIsLoading(false); // Set loading to false after the process is completed
@@ -75,7 +76,7 @@ const ResetPasswordConfirmation = () => {
     }
 
     return (
-        <div className="flex items-start justify-center min-h-screen bg-background dark:bg-background-dark">
+        <div className="flex items-start justify-center min-h-[45vh] bg-background dark:bg-background-dark">
             <div className="w-full max-w-md p-8 bg-white dark:bg-black rounded-lg shadow-lg">
                 <h3 className="text-2xl font-semibold text-primary dark:text-primary-dark">
                     Set New Password
