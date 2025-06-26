@@ -6,3 +6,4 @@ djangorestframework-simplejwt
 django-extensions
 djoser
 psycopg2-binary
+drf-yasg
