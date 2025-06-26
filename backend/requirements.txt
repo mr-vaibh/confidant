@@ -5,4 +5,4 @@ djangorestframework
 djangorestframework-simplejwt
 django-extensions
 djoser
-psycopg2
+psycopg2-binary
